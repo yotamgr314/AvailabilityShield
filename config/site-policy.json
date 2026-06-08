@@ -5,8 +5,8 @@
     "warningRatio": 0.7,
     "highRatio": 1.0,
     "criticalRatio": 1.5,
-    "maxActiveRequestsBeforeQueue": 4,
-    "maxConcurrentHeavyForwarded": 4,
+    "maxActiveRequestsBeforeQueue": 3,
+    "maxConcurrentHeavyForwarded": 3,
     "maxGatewayQueueSize": 100,
     "defaultDelayMs": 300,
     "queueDelayMs": 0
