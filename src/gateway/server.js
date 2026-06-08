@@ -11,6 +11,9 @@ const { mitigationMiddleware } = require("./middleware/mitigation.middleware");
 const { createReverseProxy } = require("./proxy/reverse-proxy");
 const { getMetricsSnapshot } = require("../analyzer/traffic-metrics");
 const { getWindowSnapshot } = require("../analyzer/request-window-store");
+const { getRecentRequestLogs } = require("../logs/request-log.service");
+const { getRecentSecurityEvents } = require("../logs/security-event.service");
+const { writeMetricSnapshot, getRecentMetricSnapshots } = require("../logs/metric-log.service");
 
 const app = express();
 
@@ -31,10 +34,45 @@ app.get("/__shield/health", (req, res) => {
   });
 });
 
+app.get("/__shield/policy", (req, res) => {
+  res.json(loadPolicy());
+});
+
 app.get("/__shield/metrics", (req, res) => {
-  res.json({
+  const snapshot = {
     metrics: getMetricsSnapshot(),
     windows: getWindowSnapshot()
+  };
+
+  writeMetricSnapshot(snapshot);
+
+  res.json(snapshot);
+});
+
+app.get("/__shield/requests", (req, res) => {
+  const limit = Number(req.query.limit || 50);
+
+  res.json({
+    logs: getRecentRequestLogs(limit),
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get("/__shield/events", (req, res) => {
+  const limit = Number(req.query.limit || 50);
+
+  res.json({
+    events: getRecentSecurityEvents(limit),
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get("/__shield/metric-snapshots", (req, res) => {
+  const limit = Number(req.query.limit || 20);
+
+  res.json({
+    snapshots: getRecentMetricSnapshots(limit),
+    timestamp: new Date().toISOString()
   });
 });
 
