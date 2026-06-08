@@ -51,7 +51,13 @@ function getWindowSnapshot() {
   };
 }
 
+function resetWindows() {
+  ipWindows.clear();
+  endpointWindows.clear();
+}
+
 module.exports = {
   recordRequestInWindow,
-  getWindowSnapshot
+  getWindowSnapshot,
+  resetWindows
 };

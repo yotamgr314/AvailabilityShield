@@ -9,8 +9,8 @@ const { requestContextMiddleware } = require("./middleware/request-context.middl
 const { metricsMiddleware } = require("./middleware/metrics.middleware");
 const { mitigationMiddleware } = require("./middleware/mitigation.middleware");
 const { createReverseProxy } = require("./proxy/reverse-proxy");
-const { getMetricsSnapshot } = require("../analyzer/traffic-metrics");
-const { getWindowSnapshot } = require("../analyzer/request-window-store");
+const { getMetricsSnapshot, resetMetrics } = require("../analyzer/traffic-metrics");
+const { getWindowSnapshot, resetWindows } = require("../analyzer/request-window-store");
 const { getRecentRequestLogs } = require("../logs/request-log.service");
 const { getRecentSecurityEvents } = require("../logs/security-event.service");
 const { writeMetricSnapshot, getRecentMetricSnapshots } = require("../logs/metric-log.service");
@@ -30,6 +30,17 @@ app.get("/__shield/health", (req, res) => {
     service: "availabilityshield-gateway",
     status: "ok",
     protectedTarget: policy.protectedTarget,
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.post("/__shield/reset", (req, res) => {
+  resetMetrics();
+  resetWindows();
+
+  res.json({
+    status: "reset",
+    message: "AvailabilityShield in-memory metrics and windows were reset",
     timestamp: new Date().toISOString()
   });
 });

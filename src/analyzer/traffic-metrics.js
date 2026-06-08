@@ -1,20 +1,24 @@
-const state = {
-  startedAt: new Date().toISOString(),
-  totalRequests: 0,
-  activeRequests: 0,
-  totalErrors: 0,
-  decisions: {
-    allow: 0,
-    limit: 0,
-    delay: 0,
-    queue: 0,
-    drop: 0,
-    alert: 0
-  },
-  byEndpoint: {},
-  byIp: {},
-  recentRequests: []
-};
+function createInitialState() {
+  return {
+    startedAt: new Date().toISOString(),
+    totalRequests: 0,
+    activeRequests: 0,
+    totalErrors: 0,
+    decisions: {
+      allow: 0,
+      limit: 0,
+      delay: 0,
+      queue: 0,
+      drop: 0,
+      alert: 0
+    },
+    byEndpoint: {},
+    byIp: {},
+    recentRequests: []
+  };
+}
+
+let state = createInitialState();
 
 function createEmptyStats() {
   return {
@@ -109,8 +113,13 @@ function getMetricsSnapshot() {
   };
 }
 
+function resetMetrics() {
+  state = createInitialState();
+}
+
 module.exports = {
   recordRequestStart,
   recordRequestEnd,
-  getMetricsSnapshot
+  getMetricsSnapshot,
+  resetMetrics
 };

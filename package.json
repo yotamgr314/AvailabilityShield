@@ -10,7 +10,9 @@
     "sim:normal": "node simulator/normal-load.js",
     "sim:heavy": "node simulator/heavy-endpoint-abuse.js",
     "sim:flood": "node simulator/http-flood.js",
-    "sim:critical": "node simulator/critical-mixed-load.js"
+    "sim:critical": "node simulator/critical-mixed-load.js",
+    "sim:compare:heavy": "node simulator/compare-without-with-shield.js",
+    "sim:compare:flood": "SCENARIO=flood node simulator/compare-without-with-shield.js"
   },
   "dependencies": {
     "axios": "^1.17.0",
