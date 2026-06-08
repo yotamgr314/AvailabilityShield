@@ -7,8 +7,10 @@ const morgan = require("morgan");
 const { loadPolicy } = require("./policies/policy-loader");
 const { requestContextMiddleware } = require("./middleware/request-context.middleware");
 const { metricsMiddleware } = require("./middleware/metrics.middleware");
+const { mitigationMiddleware } = require("./middleware/mitigation.middleware");
 const { createReverseProxy } = require("./proxy/reverse-proxy");
 const { getMetricsSnapshot } = require("../analyzer/traffic-metrics");
+const { getWindowSnapshot } = require("../analyzer/request-window-store");
 
 const app = express();
 
@@ -30,11 +32,15 @@ app.get("/__shield/health", (req, res) => {
 });
 
 app.get("/__shield/metrics", (req, res) => {
-  res.json(getMetricsSnapshot());
+  res.json({
+    metrics: getMetricsSnapshot(),
+    windows: getWindowSnapshot()
+  });
 });
 
 app.use(requestContextMiddleware);
 app.use(metricsMiddleware);
+app.use(mitigationMiddleware);
 app.use(createReverseProxy());
 
 app.listen(PORT, () => {

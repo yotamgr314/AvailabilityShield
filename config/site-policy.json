@@ -1,6 +1,20 @@
 {
   "protectedTarget": "http://localhost:3000",
+  "windowMs": 60000,
+  "thresholds": {
+    "warningRatio": 0.7,
+    "highRatio": 1.0,
+    "criticalRatio": 1.5,
+    "maxActiveRequestsBeforeQueue": 20,
+    "defaultDelayMs": 300,
+    "queueDelayMs": 1500
+  },
   "endpoints": {
+    "/health": {
+      "type": "basic",
+      "priority": "high",
+      "rateLimitPerMinute": 180
+    },
     "/api/basic": {
       "type": "basic",
       "priority": "high",

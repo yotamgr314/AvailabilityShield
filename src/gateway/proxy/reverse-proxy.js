@@ -26,9 +26,11 @@ function createReverseProxy() {
     const targetUrl = buildTargetUrl(policy.protectedTarget, req.originalUrl);
     const context = req.shieldContext;
 
-    context.decision = "allow";
-    context.severity = "normal";
-    context.reason = "Gateway pass-through: request allowed";
+    if (!context.decision) {
+      context.decision = "allow";
+      context.severity = "normal";
+      context.reason = "Gateway pass-through: request allowed";
+    }
 
     try {
       const proxyResponse = await axios({
@@ -37,7 +39,9 @@ function createReverseProxy() {
         headers: {
           ...removeHopByHopHeaders(req.headers),
           "x-forwarded-for": context.ip,
-          "x-availabilityshield-request-id": context.requestId
+          "x-availabilityshield-request-id": context.requestId,
+          "x-availabilityshield-decision": context.decision,
+          "x-availabilityshield-severity": context.severity
         },
         data: shouldForwardBody(req.method) ? req.body : undefined,
         timeout: 15000,
@@ -48,7 +52,7 @@ function createReverseProxy() {
       res.setHeader("x-availabilityshield-severity", context.severity);
 
       console.log(
-        `[AvailabilityShield] ${context.decision.toUpperCase()} ${context.method} ${context.originalUrl} ip=${context.ip} status=${proxyResponse.status}`
+        `[AvailabilityShield] FORWARDED ${context.decision.toUpperCase()} ${context.method} ${context.originalUrl} ip=${context.ip} status=${proxyResponse.status}`
       );
 
       return res.status(proxyResponse.status).send(proxyResponse.data);
