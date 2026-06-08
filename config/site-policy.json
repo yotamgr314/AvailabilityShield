@@ -1,0 +1,28 @@
+{
+  "protectedTarget": "http://localhost:3000",
+  "endpoints": {
+    "/api/basic": {
+      "type": "basic",
+      "priority": "high",
+      "rateLimitPerMinute": 120
+    },
+    "/api/search": {
+      "type": "heavy",
+      "priority": "medium",
+      "rateLimitPerMinute": 40,
+      "delayMsWhenHigh": 300
+    },
+    "/api/report": {
+      "type": "heavy",
+      "priority": "low",
+      "rateLimitPerMinute": 20,
+      "delayMsWhenHigh": 700
+    },
+    "/api/export": {
+      "type": "heavy",
+      "priority": "low",
+      "rateLimitPerMinute": 10,
+      "delayMsWhenHigh": 1000
+    }
+  }
+}
