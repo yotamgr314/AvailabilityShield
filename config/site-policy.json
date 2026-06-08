@@ -6,8 +6,10 @@
     "highRatio": 1.0,
     "criticalRatio": 1.5,
     "maxActiveRequestsBeforeQueue": 4,
+    "maxConcurrentHeavyForwarded": 4,
+    "maxGatewayQueueSize": 100,
     "defaultDelayMs": 300,
-    "queueDelayMs": 1500
+    "queueDelayMs": 0
   },
   "endpoints": {
     "/health": {

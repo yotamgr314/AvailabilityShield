@@ -14,6 +14,7 @@ const { getWindowSnapshot, resetWindows } = require("../analyzer/request-window-
 const { getRecentRequestLogs } = require("../logs/request-log.service");
 const { getRecentSecurityEvents } = require("../logs/security-event.service");
 const { writeMetricSnapshot, getRecentMetricSnapshots } = require("../logs/metric-log.service");
+const { getQueueSnapshot, resetQueue } = require("./queue/request-queue");
 
 const app = express();
 
@@ -37,10 +38,11 @@ app.get("/__shield/health", (req, res) => {
 app.post("/__shield/reset", (req, res) => {
   resetMetrics();
   resetWindows();
+  resetQueue();
 
   res.json({
     status: "reset",
-    message: "AvailabilityShield in-memory metrics and windows were reset",
+    message: "AvailabilityShield in-memory metrics, windows and queue were reset",
     timestamp: new Date().toISOString()
   });
 });
@@ -49,10 +51,18 @@ app.get("/__shield/policy", (req, res) => {
   res.json(loadPolicy());
 });
 
+app.get("/__shield/queue", (req, res) => {
+  res.json({
+    queue: getQueueSnapshot(),
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.get("/__shield/metrics", (req, res) => {
   const snapshot = {
     metrics: getMetricsSnapshot(),
-    windows: getWindowSnapshot()
+    windows: getWindowSnapshot(),
+    queue: getQueueSnapshot()
   };
 
   writeMetricSnapshot(snapshot);

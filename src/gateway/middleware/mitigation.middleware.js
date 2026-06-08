@@ -25,11 +25,16 @@ async function mitigationMiddleware(req, res, next) {
     policy
   });
 
+  context.endpointType = endpointPolicy?.type || "unknown";
+  context.priority = endpointPolicy?.priority || "medium";
   context.decision = decision.decision;
   context.severity = decision.severity;
   context.reason = decision.reason;
   context.delayMs = decision.delayMs || 0;
+  context.queueWaitMs = 0;
   context.windowStats = windowStats;
+
+  req.shieldPolicy = policy;
 
   console.log(
     `[AvailabilityShield] DECISION ${context.decision.toUpperCase()} severity=${context.severity} endpoint=${context.endpoint} ip=${context.ip} reason="${context.reason}"`
