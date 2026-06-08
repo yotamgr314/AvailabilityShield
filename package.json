@@ -6,7 +6,11 @@
   "scripts": {
     "dev:app": "nodemon src/protected-app/server.js",
     "dev": "concurrently \"npm run dev:app\" \"npm run dev:gateway\"",
-    "dev:gateway": "nodemon src/gateway/server.js"
+    "dev:gateway": "nodemon src/gateway/server.js",
+    "sim:normal": "node simulator/normal-load.js",
+    "sim:heavy": "node simulator/heavy-endpoint-abuse.js",
+    "sim:flood": "node simulator/http-flood.js",
+    "sim:critical": "node simulator/critical-mixed-load.js"
   },
   "dependencies": {
     "axios": "^1.17.0",
