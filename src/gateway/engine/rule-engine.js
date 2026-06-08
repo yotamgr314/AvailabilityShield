@@ -1,16 +1,11 @@
 const { classifyRequest } = require("./classifier");
 
 function decideMitigation({ context, endpointPolicy, windowStats, metricsSnapshot, policy }) {
-  const classification = classifyRequest({
-    endpointPolicy,
-    windowStats,
-    metricsSnapshot,
-    policy
-  });
-
   const thresholds = policy.thresholds || {};
   const endpointType = endpointPolicy?.type || "unknown";
   const priority = endpointPolicy?.priority || "medium";
+  const activeRequests = metricsSnapshot.activeRequests || 0;
+  const maxActiveBeforeQueue = thresholds.maxActiveRequestsBeforeQueue || 4;
 
   if (!endpointPolicy) {
     return {
@@ -20,6 +15,22 @@ function decideMitigation({ context, endpointPolicy, windowStats, metricsSnapsho
       reason: "Endpoint is not listed in Site Policy, allowing for monitoring"
     };
   }
+
+  if (endpointType === "heavy" && activeRequests > maxActiveBeforeQueue) {
+    return {
+      decision: "queue",
+      severity: "high",
+      delayMs: thresholds.queueDelayMs || 1500,
+      reason: `Gateway active request pressure: ${activeRequests}/${maxActiveBeforeQueue}. Heavy request queued before reaching protected app`
+    };
+  }
+
+  const classification = classifyRequest({
+    endpointPolicy,
+    windowStats,
+    metricsSnapshot,
+    policy
+  });
 
   if (classification.severity === "critical") {
     if (priority === "high") {

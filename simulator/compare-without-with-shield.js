@@ -23,9 +23,12 @@ function summarize(results) {
   };
 }
 
-async function resetShieldState() {
-  const client = createHttpClient(SHIELD_TARGET);
-  await client.post("/__shield/reset");
+async function resetDemoState() {
+  const shieldClient = createHttpClient(SHIELD_TARGET);
+  const appClient = createHttpClient(DIRECT_TARGET);
+
+  await shieldClient.post("/__shield/reset");
+  await appClient.post("/__app/reset");
 }
 
 async function runHeavyComparison() {
@@ -44,7 +47,7 @@ async function runHeavyComparison() {
     delayBetweenMs: 0
   });
 
-  await resetShieldState();
+  await resetDemoState();
 
   const withShield = await runSequentialScenario({
     name: "WITH Shield: AvailabilityShield gateway",
@@ -77,7 +80,7 @@ async function runFloodComparison() {
     concurrency: 5
   });
 
-  await resetShieldState();
+  await resetDemoState();
 
   const withShield = await runConcurrentScenario({
     name: "WITH Shield: AvailabilityShield gateway",

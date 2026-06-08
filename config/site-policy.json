@@ -5,7 +5,7 @@
     "warningRatio": 0.7,
     "highRatio": 1.0,
     "criticalRatio": 1.5,
-    "maxActiveRequestsBeforeQueue": 20,
+    "maxActiveRequestsBeforeQueue": 4,
     "defaultDelayMs": 300,
     "queueDelayMs": 1500
   },
