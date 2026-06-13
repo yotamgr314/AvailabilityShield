@@ -14,7 +14,8 @@
     "sim:compare:heavy": "node simulator/compare-without-with-shield.js",
     "sim:compare:flood": "SCENARIO=flood node simulator/compare-without-with-shield.js",
     "sim:basic-preservation": "node simulator/basic-preservation.js",
-    "validate:backend": "node validation/backend-validation.js"
+    "validate:backend": "node validation/backend-validation.js",
+    "sim:tcp-burst": "node simulator/tcp-connection-burst.js"
   },
   "dependencies": {
     "axios": "^1.17.0",

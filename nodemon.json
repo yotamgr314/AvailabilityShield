@@ -1,0 +1,9 @@
+﻿{
+  "ignore": [
+    "logs/**/*",
+    "captures/**/*",
+    "*.pcap",
+    "*.pcapng",
+    "layer4/**/*.json"
+  ]
+}
