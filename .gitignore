@@ -4,3 +4,8 @@ node_modules/
 npm-debug.log*
 !src/logs/
 !src/logs/**
+
+# Local SQLite database files
+/data/*.db
+/data/*.db-shm
+/data/*.db-wal
